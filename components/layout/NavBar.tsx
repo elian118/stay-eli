@@ -1,11 +1,13 @@
 'use client';
 
 import { useAuth, UserButton } from '@clerk/nextjs';
-import Container from '@/components/ui/Container';
+import Container from '@/components/Container';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import SearchInput from '@/components/ui/SearchInput';
+import SearchInput from '@/components/SearchInput';
+import { ModeToggle } from '@/components/theme-toggle';
+import { NavMenu } from '@/components/layout/NavMenu';
 
 const NavBar = () => {
   const router = useRouter();
@@ -24,7 +26,10 @@ const NavBar = () => {
           </div>
           <SearchInput />
           <div className="flex gap-3 items-center">
-            <div>theme</div>
+            <div>
+              <ModeToggle />
+              <NavMenu />
+            </div>
             <UserButton afterSignOutUrl="/" />
             {!userId && (
               <>
