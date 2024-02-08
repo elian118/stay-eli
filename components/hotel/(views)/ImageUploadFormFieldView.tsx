@@ -23,7 +23,6 @@ export const ImageUploadFormFieldView = ({
   form,
   hotel,
 }: ImageUploadFormFieldViewProps) => {
-  // const [image, setImage] = imageState;
   const [image, setImage] = useState<string | undefined>(hotel?.image);
   const [imageIsDeleting, setImageIsDeleting] = useState(false);
 

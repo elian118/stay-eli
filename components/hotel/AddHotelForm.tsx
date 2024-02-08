@@ -18,6 +18,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { checkList, defaultValues, formSchema } from '@/components/hotel/constants';
 import { ImageUploadFormFieldView } from '@/components/hotel/(views)/ImageUploadFormFieldView';
+import CountryFormFieldView from '@/components/hotel/(views)/CountryFormFieldView';
 
 type AddHotelFromProps = {
   hotel: HotelWithRooms | null;
@@ -78,7 +79,7 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
                 </FormItem>
               )}
             />
-            <div>
+            <div className="pb-2">
               <FormLabel>Choose Amenities</FormLabel>
               <FormDescription>Choose Amenities popular in your hotel</FormDescription>
               <div className="grid grid-cols-2 gap-4 mt-2">
@@ -87,7 +88,7 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
                     control={form.control}
                     name={e.key as any}
                     render={({ field }) => (
-                      <FormItem className="flex flex-row items-end space-x-3 rounded-md border p-4">
+                      <FormItem className="flex flex-row items-end space-x-3 rounded-md">
                         <FormControl>
                           <Checkbox
                             checked={field.value}
@@ -103,7 +104,9 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
             </div>
             <ImageUploadFormFieldView form={form} hotel={hotel} />
           </div>
-          <div className="flex flex-1 flex-col gap-6">part2</div>
+          <div className="flex flex-1 flex-col gap-6">
+            <CountryFormFieldView form={form} />
+          </div>
         </div>
       </form>
     </Form>
