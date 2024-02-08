@@ -4,21 +4,15 @@ import * as z from 'zod';
 import { Hotel, Room } from '@prisma/client';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
-import { checkList, defaultValues, formSchema } from '@/components/hotel/constants';
+import { Form } from '@/components/ui/form';
+import { defaultValues, formSchema } from '@/components/hotel/constants';
 import { ImageUploadFormFieldView } from '@/components/hotel/(views)/ImageUploadFormFieldView';
 import CountryFormFieldView from '@/components/hotel/(views)/CountryFormFieldView';
+import React, { useEffect, useState } from 'react';
+import SubmitBtnView from '@/components/hotel/(views)/SubmitBtnView';
+import IntroFormFieldView from '@/components/hotel/(views)/IntroFormFieldView';
+import useAxios from '@/hooks/useAxios';
+import { useRouter } from 'next/navigation';
 
 type AddHotelFromProps = {
   hotel: HotelWithRooms | null;
@@ -29,14 +23,54 @@ export type HotelWithRooms = Hotel & {
 };
 
 const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
+  const [image, setImage] = useState<string | undefined>(hotel?.image);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isHotelDeleting, setIsHotelDeleting] = useState<boolean>(false);
+  const router = useRouter();
+  const { postHandler, patchHandler, delHandler } = useAxios();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues,
+    defaultValues: hotel || defaultValues,
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsLoading(true);
+
+    if (hotel) {
+      // update
+      await patchHandler(`/api/hotel/${hotel.id}`, values, '🎉 Hotel updated!');
+      setIsLoading(false);
+    } else {
+      const res = await postHandler('/api/hotel', values, '🎉 Hotel created!');
+      res && router.push(`/hotel/${res.data.id}`);
+      setIsLoading(false);
+    }
   };
+
+  const handleDeleteHotel = async (hotel: HotelWithRooms) => {
+    let res1;
+    let res2;
+
+    setIsHotelDeleting(true);
+    const getImageKey = (src: string) => src.substring(src.lastIndexOf('/') + 1);
+    const imageKey = getImageKey(hotel.image);
+    res1 = await postHandler('/api/uploadthing/delete', { imageKey });
+    res2 = res1 ? await delHandler(`/api/hotel/${hotel.id}`, 'Hotel Delete!') : null;
+    res2 && router.push('/hotel/new');
+
+    setIsHotelDeleting(false);
+  };
+
+  useEffect(() => {
+    if (typeof image === 'string') {
+      form.setValue('image', image, {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: false,
+      });
+    }
+  }, [image]);
 
   return (
     <Form {...form}>
@@ -46,66 +80,23 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
         </h3>
         <div className="flex flex-col md:flex-row gap-6">
           <div className="flex flex-1 flex-col gap-6">
-            <FormField
-              control={form.control}
-              name="title"
-              render={(fields) => (
-                <FormItem>
-                  <FormLabel>Hotel Title *</FormLabel>
-                  <FormDescription>Provide your hotel name</FormDescription>
-                  <FormControl>
-                    <Input placeholder="Beach Hotel" {...fields} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+            <IntroFormFieldView form={form} />
+            <ImageUploadFormFieldView
+              form={form}
+              hotel={hotel}
+              imageState={[image, setImage]}
             />
-            <FormField
-              control={form.control}
-              name="description"
-              render={(fields) => (
-                <FormItem>
-                  <FormLabel>Hotel Description *</FormLabel>
-                  <FormDescription>
-                    Provide a detailed description of your hotel
-                  </FormDescription>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Beach Hotel is parked with many awesome amenitie!"
-                      {...fields}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="pb-2">
-              <FormLabel>Choose Amenities</FormLabel>
-              <FormDescription>Choose Amenities popular in your hotel</FormDescription>
-              <div className="grid grid-cols-2 gap-4 mt-2">
-                {checkList.map((e) => (
-                  <FormField
-                    control={form.control}
-                    name={e.key as any}
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-end space-x-3 rounded-md">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <FormLabel className="cursor-pointer">{e.label}</FormLabel>
-                      </FormItem>
-                    )}
-                  />
-                ))}
-              </div>
-            </div>
-            <ImageUploadFormFieldView form={form} hotel={hotel} />
           </div>
           <div className="flex flex-1 flex-col gap-6">
-            <CountryFormFieldView form={form} />
+            <div className="flex flex-1 flex-col gap-6">
+              <CountryFormFieldView form={form} isLoading={isLoading} />
+              <SubmitBtnView
+                hotel={hotel}
+                isLoading={isLoading}
+                isHotelDeleting={isHotelDeleting}
+                handleDeleteHotel={handleDeleteHotel}
+              />
+            </div>
           </div>
         </div>
       </form>

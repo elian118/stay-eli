@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import useLocation from '@/hooks/useLocation';
 import { ICity, IState } from 'country-state-city';
@@ -20,11 +22,11 @@ import { Textarea } from '@/components/ui/textarea';
 
 type CountryFormFieldViewProps = {
   form: any;
+  isLoading: boolean;
 };
-const CountryFormFieldView = ({ form }: CountryFormFieldViewProps) => {
+const CountryFormFieldView = ({ form, isLoading }: CountryFormFieldViewProps) => {
   const [states, setStates] = useState<IState[]>([]);
   const [cities, setCities] = useState<ICity[]>([]);
-  const [isLoading] = useState<boolean>(false);
 
   const { getAllCountries, getCountryStates, getStateCities } = useLocation();
   const countries = getAllCountries();
@@ -47,7 +49,7 @@ const CountryFormFieldView = ({ form }: CountryFormFieldViewProps) => {
   }, [form.watch('country'), form.watch('state')]);
 
   return (
-    <div className="flex flex-1 flex-col gap-6">
+    <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <FormField
           name="country"
@@ -157,7 +159,7 @@ const CountryFormFieldView = ({ form }: CountryFormFieldViewProps) => {
           </FormItem>
         )}
       />
-    </div>
+    </>
   );
 };
 

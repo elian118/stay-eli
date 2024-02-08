@@ -1,12 +1,16 @@
 import axios from 'axios';
 import { toast } from '@/components/ui/use-toast';
-import { Dispatch, SetStateAction } from 'react';
 
 const useAxios = () => {
+  const errMsg: any = {
+    variant: 'destructive',
+    description: 'Something went wrong!',
+  };
+
   const delImage = (
     imageKey: string,
-    setImage?: Dispatch<SetStateAction<string | undefined>>,
-    setImageIsDeleting?: Dispatch<SetStateAction<boolean>>,
+    setImage?: (val: string | undefined) => void,
+    setImageIsDeleting?: (val: boolean) => void,
   ) => {
     axios
       .post('/api/uploadthing/delete', { imageKey })
@@ -20,17 +24,64 @@ const useAxios = () => {
         }
       })
       .catch(() => {
-        toast({
-          variant: 'destructive',
-          description: 'Something went wrong',
-        });
+        toast(errMsg);
       })
       .finally(() => {
         setImageIsDeleting && setImageIsDeleting(false);
       });
   };
 
-  return { delImage };
+  const postHandler = async (url: string, data: any, description?: string) => {
+    try {
+      const res = await axios.post(url, data);
+      if (res) {
+        toast({
+          variant: 'success',
+          description: description ?? '',
+        });
+      }
+      return res;
+    } catch (err) {
+      console.error(err);
+      toast(errMsg);
+    }
+  };
+
+  const patchHandler = async (url: string, data: any, description?: string) => {
+    try {
+      const res = await axios.patch(url, data);
+      if (res) {
+        toast({
+          variant: 'success',
+          description: description ?? '',
+        });
+      }
+      return res;
+    } catch (err) {
+      console.error(err);
+      toast(errMsg);
+    }
+  };
+
+  const delHandler = async (url: string, description?: string) => {
+    try {
+      const res = await axios.delete(url);
+      if (res) {
+        toast({
+          variant: 'success',
+          description: description ?? '',
+        });
+      }
+      return res;
+    } catch (err: any) {
+      console.error(err);
+      toast({
+        variant: 'destructive',
+        description: `Deletion could not be completed. ${err.message}`,
+      });
+    }
+  };
+  return { delImage, postHandler, patchHandler, delHandler };
 };
 
 export default useAxios;

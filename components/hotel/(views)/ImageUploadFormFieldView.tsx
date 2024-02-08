@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import {
   FormControl,
@@ -17,13 +19,14 @@ import { HotelWithRooms } from '@/components/hotel/AddHotelForm';
 export type ImageUploadFormFieldViewProps = {
   form: any;
   hotel: HotelWithRooms | null;
+  imageState: [string | undefined, (val: string | undefined) => void];
 };
 
 export const ImageUploadFormFieldView = ({
   form,
-  hotel,
+  imageState,
 }: ImageUploadFormFieldViewProps) => {
-  const [image, setImage] = useState<string | undefined>(hotel?.image);
+  const [image, setImage] = imageState;
   const [imageIsDeleting, setImageIsDeleting] = useState(false);
 
   const { delImage } = useAxios();
