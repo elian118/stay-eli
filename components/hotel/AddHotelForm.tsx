@@ -16,14 +16,14 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-import { checkList, formSchema } from '@/components/hotel/constants';
+import { checkList, defaultValues, formSchema } from '@/components/hotel/constants';
 import { useState } from 'react';
 import { UploadButton } from '@/components/uploadthing';
 import { useToast } from '@/components/ui/use-toast';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Loader2, XCircle } from 'lucide-react';
-import axios from 'axios';
+import useAxios from '@/hooks/useAxios';
 
 type AddHotelFromProps = {
   hotel: HotelWithRooms | null;
@@ -38,30 +38,11 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
   const [imageIsDeleting, setImageIsDeleting] = useState<boolean>(false);
 
   const { toast } = useToast();
+  const { delImage } = useAxios();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: '',
-      description: '',
-      image: '',
-      country: '',
-      state: '',
-      city: '',
-      locationDescription: '',
-      gym: false,
-      spa: false,
-      bar: false,
-      laundry: false,
-      restaurant: false,
-      shopping: false,
-      freeParking: false,
-      bikeRental: false,
-      freeWifi: false,
-      movieNights: false,
-      swimmingPool: false,
-      coffeeShop: false,
-    },
+    defaultValues,
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
@@ -71,27 +52,7 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
   const handleImageDelete = (image: string) => {
     setImageIsDeleting(true);
     const imageKey = image.substring(image.lastIndexOf('/') + 1);
-
-    axios
-      .post('/api/uploadthing/delete', { imageKey })
-      .then((res) => {
-        if (res.data.success) {
-          setImage('');
-          toast({
-            variant: 'success',
-            description: 'Image removed',
-          });
-        }
-      })
-      .catch(() => {
-        toast({
-          variant: 'destructive',
-          description: 'Something went wrong',
-        });
-      })
-      .finally(() => {
-        setImageIsDeleting(false);
-      });
+    delImage(imageKey, setImage, setImageIsDeleting);
   };
 
   return (

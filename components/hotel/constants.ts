@@ -32,53 +32,36 @@ export const formSchema = z.object({
   coffeeShop: z.boolean().optional(),
 });
 
-export const checkList = [
-  {
-    key: 'gym',
-    label: 'Gym',
-  },
-  {
-    key: 'spa',
-    label: 'Spa',
-  },
-  {
-    key: 'bar',
-    label: 'Bar',
-  },
-  {
-    key: 'laundry',
-    label: 'Laundry Facilities',
-  },
-  {
-    key: 'restaurant',
-    label: 'Restaurant',
-  },
-  {
-    key: 'shopping',
-    label: 'Shopping',
-  },
-  {
-    key: 'freeParking',
-    label: 'Free Parking',
-  },
-  {
-    key: 'bikeRental',
-    label: 'Bike Rental',
-  },
-  {
-    key: 'freeWifi',
-    label: 'Free Wifi',
-  },
-  {
-    key: 'movieNights',
-    label: 'Movie Nights',
-  },
-  {
-    key: 'swimmingPool',
-    label: 'Swimming Pool',
-  },
-  {
-    key: 'coffeeShop',
-    label: 'Coffee Shop',
-  },
-];
+export const defaultValues = {
+  title: '',
+  description: '',
+  image: '',
+  country: '',
+  state: '',
+  city: '',
+  locationDescription: '',
+  gym: false,
+  spa: false,
+  bar: false,
+  laundry: false,
+  restaurant: false,
+  shopping: false,
+  freeParking: false,
+  bikeRental: false,
+  freeWifi: false,
+  movieNights: false,
+  swimmingPool: false,
+  coffeeShop: false,
+};
+
+export const checkList = Object.keys(defaultValues)
+  .slice(7)
+  .map((e, idx) => {
+    const toTitleCase = (str: string) =>
+      `${str.slice(0, 1).toUpperCase()}${str.slice(1).replace(/([a-z])([A-Z])/g, '$1 $2')}`;
+
+    return {
+      key: e,
+      label: `${toTitleCase(e)}${idx === 3 ? ' Facilities' : ''}`,
+    };
+  });
