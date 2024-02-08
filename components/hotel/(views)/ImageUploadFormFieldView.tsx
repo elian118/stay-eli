@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import {
   FormControl,
   FormDescription,
@@ -11,22 +11,28 @@ import { Button } from '@/components/ui/button';
 import { Loader2, XCircle } from 'lucide-react';
 import { UploadButton } from '@/components/uploadthing';
 import { useToast } from '@/components/ui/use-toast';
+import useAxios from '@/hooks/useAxios';
 
 export type ImageUploadFormFieldViewProps = {
   form: any;
   imageState: [string | undefined, Dispatch<SetStateAction<string | undefined>>];
-  imageIsDeleting: boolean;
-  handleImageDelete: (image: string) => void;
 };
 
 export const ImageUploadFormFieldView = ({
   form,
   imageState,
-  imageIsDeleting,
-  handleImageDelete,
 }: ImageUploadFormFieldViewProps) => {
   const [image, setImage] = imageState;
+  const [imageIsDeleting, setImageIsDeleting] = useState(false);
+
+  const { delImage } = useAxios();
   const { toast } = useToast();
+
+  const handleImageDelete = (image: string) => {
+    setImageIsDeleting(true);
+    const imageKey = image.substring(image.lastIndexOf('/') + 1);
+    delImage(imageKey, setImage, setImageIsDeleting);
+  };
 
   return (
     <FormField

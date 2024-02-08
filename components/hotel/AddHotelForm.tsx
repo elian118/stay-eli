@@ -18,7 +18,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { checkList, defaultValues, formSchema } from '@/components/hotel/constants';
 import { useState } from 'react';
-import useAxios from '@/hooks/useAxios';
 import { ImageUploadFormFieldView } from '@/components/hotel/(views)/ImageUploadFormFieldView';
 
 type AddHotelFromProps = {
@@ -31,9 +30,6 @@ export type HotelWithRooms = Hotel & {
 
 const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
   const [image, setImage] = useState<string | undefined>(hotel?.image);
-  const [imageIsDeleting, setImageIsDeleting] = useState<boolean>(false);
-
-  const { delImage } = useAxios();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -42,12 +38,6 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     console.log(values);
-  };
-
-  const handleImageDelete = (image: string) => {
-    setImageIsDeleting(true);
-    const imageKey = image.substring(image.lastIndexOf('/') + 1);
-    delImage(imageKey, setImage, setImageIsDeleting);
   };
 
   return (
@@ -114,12 +104,7 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
                 ))}
               </div>
             </div>
-            <ImageUploadFormFieldView
-              form={form}
-              imageState={[image, setImage]}
-              imageIsDeleting={imageIsDeleting}
-              handleImageDelete={handleImageDelete}
-            />
+            <ImageUploadFormFieldView form={form} imageState={[image, setImage]} />
           </div>
           <div className="flex flex-1 flex-col gap-6">part2</div>
         </div>
