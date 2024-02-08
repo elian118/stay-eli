@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import * as z from 'zod';
 import { Hotel, Room } from '@prisma/client';
 import { useForm } from 'react-hook-form';
@@ -8,11 +9,11 @@ import { Form } from '@/components/ui/form';
 import { defaultValues, formSchema } from '@/components/hotel/constants';
 import { ImageUploadFormFieldView } from '@/components/hotel/(views)/ImageUploadFormFieldView';
 import CountryFormFieldView from '@/components/hotel/(views)/CountryFormFieldView';
-import React, { useEffect, useState } from 'react';
 import SubmitBtnView from '@/components/hotel/(views)/SubmitBtnView';
 import IntroFormFieldView from '@/components/hotel/(views)/IntroFormFieldView';
 import useAxios from '@/hooks/useAxios';
 import { useRouter } from 'next/navigation';
+import AlertView from '@/components/hotel/(views)/AlertView';
 
 type AddHotelFromProps = {
   hotel: HotelWithRooms | null;
@@ -81,15 +82,12 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
         <div className="flex flex-col md:flex-row gap-6">
           <div className="flex flex-1 flex-col gap-6">
             <IntroFormFieldView form={form} />
-            <ImageUploadFormFieldView
-              form={form}
-              hotel={hotel}
-              imageState={[image, setImage]}
-            />
+            <ImageUploadFormFieldView form={form} imageState={[image, setImage]} />
           </div>
           <div className="flex flex-1 flex-col gap-6">
             <div className="flex flex-1 flex-col gap-6">
               <CountryFormFieldView form={form} isLoading={isLoading} />
+              <AlertView hotel={hotel} />
               <SubmitBtnView
                 hotel={hotel}
                 isLoading={isLoading}

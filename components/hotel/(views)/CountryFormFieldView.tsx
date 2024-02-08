@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import useLocation from '@/hooks/useLocation';
 import { ICity, IState } from 'country-state-city';
 import {
