@@ -17,7 +17,6 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { checkList, defaultValues, formSchema } from '@/components/hotel/constants';
-import { useState } from 'react';
 import { ImageUploadFormFieldView } from '@/components/hotel/(views)/ImageUploadFormFieldView';
 
 type AddHotelFromProps = {
@@ -29,8 +28,6 @@ export type HotelWithRooms = Hotel & {
 };
 
 const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
-  const [image, setImage] = useState<string | undefined>(hotel?.image);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues,
@@ -104,7 +101,7 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
                 ))}
               </div>
             </div>
-            <ImageUploadFormFieldView form={form} imageState={[image, setImage]} />
+            <ImageUploadFormFieldView form={form} hotel={hotel} />
           </div>
           <div className="flex flex-1 flex-col gap-6">part2</div>
         </div>

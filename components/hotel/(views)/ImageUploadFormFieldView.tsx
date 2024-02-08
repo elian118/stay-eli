@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { useState } from 'react';
 import {
   FormControl,
   FormDescription,
@@ -12,17 +12,19 @@ import { Loader2, XCircle } from 'lucide-react';
 import { UploadButton } from '@/components/uploadthing';
 import { useToast } from '@/components/ui/use-toast';
 import useAxios from '@/hooks/useAxios';
+import { HotelWithRooms } from '@/components/hotel/AddHotelForm';
 
 export type ImageUploadFormFieldViewProps = {
   form: any;
-  imageState: [string | undefined, Dispatch<SetStateAction<string | undefined>>];
+  hotel: HotelWithRooms | null;
 };
 
 export const ImageUploadFormFieldView = ({
   form,
-  imageState,
+  hotel,
 }: ImageUploadFormFieldViewProps) => {
-  const [image, setImage] = imageState;
+  // const [image, setImage] = imageState;
+  const [image, setImage] = useState<string | undefined>(hotel?.image);
   const [imageIsDeleting, setImageIsDeleting] = useState(false);
 
   const { delImage } = useAxios();
