@@ -7,13 +7,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from '@/components/ui/form';
 import { defaultValues, formSchema } from '@/components/hotel/constants';
-import { ImageUploadFormFieldView } from '@/components/hotel/(views)/ImageUploadFormFieldView';
-import CountryFormFieldView from '@/components/hotel/(views)/CountryFormFieldView';
-import SubmitBtnView from '@/components/hotel/(views)/SubmitBtnView';
-import IntroFormFieldView from '@/components/hotel/(views)/IntroFormFieldView';
+import { ImageUploadFormFieldView } from '@/components/hotel/components/ImageUploadFormFieldView';
+import CountryFormFieldView from '@/components/hotel/components/CountryFormFieldView';
+import SubmitBtnView from '@/components/hotel/components/SubmitBtnView';
+import IntroFormFieldView from '@/components/hotel/components/IntroFormFieldView';
 import useAxios from '@/hooks/useAxios';
 import { useRouter } from 'next/navigation';
-import AlertView from '@/components/hotel/(views)/AlertView';
+import AlertView from '@/components/hotel/components/AlertView';
 
 type AddHotelFromProps = {
   hotel: HotelWithRooms | null;

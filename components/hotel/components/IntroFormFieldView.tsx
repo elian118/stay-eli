@@ -56,9 +56,9 @@ const IntroFormFieldView = ({ form }: IntroFormFieldViewProps) => {
         <FormLabel>Choose Amenities</FormLabel>
         <FormDescription>Choose Amenities popular in your hotel</FormDescription>
         <div className="grid grid-cols-2 gap-4 mt-2">
-          {checkList.map((e) => (
+          {checkList.map((e, idx) => (
             <FormField
-              key={e.key}
+              key={`${e.key}-${idx}`}
               control={form.control}
               name={e.key as any}
               render={({ field }) => (

@@ -54,11 +54,11 @@ const IntroRoomFormFieldView = ({ form }: IntroRoomFormFieldViewProps) => {
         <FormLabel>Choose Room Amenities</FormLabel>
         <FormDescription>What makes this room a good choice?</FormDescription>
         <div className="grid grid-cols-2 gap-2 mt-2">
-          {checkList.map((e) => (
+          {checkList.map((e, idx) => (
             <FormField
-              key={e.key}
+              key={`${e.key}-${idx}`}
               control={form.control}
-              name="roomService"
+              name={e.key}
               render={({ field }) => (
                 <FormItem className="flex flex-row items-end space-x-3 rounded-md">
                   <FormControl>

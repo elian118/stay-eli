@@ -14,9 +14,12 @@ import { Loader2, XCircle } from 'lucide-react';
 import { UploadButton } from '@/components/uploadthing';
 import { useToast } from '@/components/ui/use-toast';
 import useAxios from '@/hooks/useAxios';
+import { UseFormReturn } from 'react-hook-form';
+import * as z from 'zod';
+import { formSchema } from '@/components/room/constants';
 
 export type ImageUploadFormFieldViewProps = {
-  form: any;
+  form: UseFormReturn<z.infer<typeof formSchema>>;
   imageState: [string | undefined, (val: string | undefined) => void];
 };
 

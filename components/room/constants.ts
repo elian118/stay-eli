@@ -1,5 +1,13 @@
 import * as z from 'zod';
 
+type Option = {
+  key: any;
+  label: string;
+  description: string;
+  max?: number;
+  required?: boolean;
+};
+
 export const formSchema = z.object({
   title: z.string().min(3, { message: 'Title must be at least 3 characters long' }),
   description: z
@@ -59,3 +67,50 @@ export const checkList = Object.keys(defaultValues)
       label: `${idx === 0 ? '24hours ' : ''}${toTitleCase(e)}`,
     };
   });
+
+export const roomOptions: Option[] = [
+  {
+    key: 'roomPrice',
+    label: 'Room Price in USD',
+    description: 'State the price for staying in this room for 24hours.',
+    required: true,
+  },
+  {
+    key: 'bedCount',
+    label: 'Bed Count',
+    description: 'How many beds are available in this room.',
+    max: 8,
+    required: true,
+  },
+  {
+    key: 'guestCount',
+    label: 'Guest Count',
+    description: 'How many guests are allowed in this room.',
+    max: 20,
+    required: true,
+  },
+  {
+    key: 'bathroomCount',
+    label: 'Bathroom Count',
+    description: 'How many bathroom are in this room.',
+    max: 8,
+    required: true,
+  },
+  {
+    key: 'breakfastPrice',
+    label: 'Breakfast Price in USD',
+    description: 'State the price for staying in this room for 24hours.',
+  },
+  {
+    key: 'kingBed',
+    label: 'King Beds',
+    description: 'How many king beds are available in this room.',
+    max: 8,
+  },
+  {
+    key: 'queenBed',
+    label: 'Queen Beds',
+    description: 'How many queen beds ard in this room.',
+    max: 8,
+  },
+];
